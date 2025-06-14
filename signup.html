@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <form id="signup-form">
+    <h2>Create account</h2>
+
+    <label>Email</label>
+    <input type="email" id="email" placeholder="name@example.com" required />
+
+    <label>Password</label>
+    <input type="password" id="password" placeholder="At least 6 characters" required />
+
+    <button type="submit">Sign Up</button>
+    <p id="msg"></p>
+
+    <p class="small">
+      Already registered?
+      <a href="index.html">Log in</a>
+    </p>
+  </form>
+
+  <script type="module">
+    import { createClient } from
+      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabase = createClient(
+      'https://wvdmapmfiyvbprsczyp.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2ZG1hcG1maXl2YnJwc2N6cnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NzYxOTMsImV4cCI6MjA2NTQ1MjE5M30.vwW5CzOI0Img6663sAIXKUL9g6qVpOJY2cd0Qulhu14'
+    );
+
+    const form = document.getElementById('signup-form');
+    const msg  = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Creating account…';
+
+      const { error } = await supabase.auth.signUp({
+        email:    document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value,
+      });
+
+      if (error) {
+        msg.textContent = '❌ ' + error.message;
+        msg.style.color = 'crimson';
+      } else {
+        msg.style.color = 'green';
+        msg.textContent = '✅ Check your inbox for confirm-email link';
+      }
+    });
+  </script>
+</body>
+</html>
